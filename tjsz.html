@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>租机计划计算器 - 天际速租</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .brand {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #4a5568;
+            font-size: 18px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+        
+        .calculator {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calculator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        h2 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f7fafc;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+        
+        .result::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .result h3 {
+            color: #2d3748;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .result p {
+            color: #4a5568;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .result p:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .result span {
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        @media (max-width: 600px) {
+            .calculator {
+                padding: 30px 20px;
+            }
+            
+            .brand {
+                font-size: 14px;
+                top: 10px;
+                right: 10px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand">天际速租</div>
+        <div class="calculator">
+            <h2>租机计划计算器</h2>
+        <div class="form-group">
+            <label for="initialFund">初始资金（元）:</label>
+            <input type="number" id="initialFund" value="1000000" min="0">
+        </div>
+        <div class="form-group">
+            <label for="purchasePrice">采购价（元/台）:</label>
+            <input type="number" id="purchasePrice" value="8300" min="0">
+        </div>
+        <div class="form-group">
+            <label for="period">期数:（每期为1个月，每期默认为22天）</label>
+            <select id="period">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="6">6</option>
+                <option value="12">12</option>
+            </select>
+        </div>
+        <button onclick="calculate()">计算</button>
+        
+        <div class="result" id="result">
+            <h3>计算结果</h3>
+            <p>每期计划: <span id="periodPlan">-</span> 元</p>
+            <p>每期可采购: <span id="periodUnits">-</span> 台</p>
+            <p>每日计划:<span id="dailyPlan">-</span> 台</p>
+            <p>实际执行方案: <span id="executionPlan">-</span></p>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // 获取输入值
+            const initialFund = parseFloat(document.getElementById('initialFund').value);
+            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
+            const period = parseInt(document.getElementById('period').value);
+            
+            // 验证输入
+            if (isNaN(initialFund) || isNaN(purchasePrice) || isNaN(period)) {
+                alert('请输入有效的数值');
+                return;
+            }
+            
+            if (initialFund <= 0 || purchasePrice <= 0) {
+                alert('初始资金和采购价必须大于0');
+                return;
+            }
+            
+            // 计算每期计划
+            const periodPlan = Math.round(initialFund / period);
+            
+            // 计算每期可采购台数
+            const periodUnits = Math.floor(periodPlan / purchasePrice);
+            
+            // 计算每日计划（假设每月22个工作日）
+            const dailyUnits = periodUnits / 22;
+            
+            // 处理小数部分，生成实际执行方案
+            let executionPlan = "";
+            if (dailyUnits >= 1) {
+                executionPlan = `每天 ${Math.round(dailyUnits)} 台`;
+            } else if (dailyUnits > 0) {
+                const daysPerUnit = Math.round(1 / dailyUnits);
+                executionPlan = `每 ${daysPerUnit} 天 1 台`;
+            } else {
+                executionPlan = "每期采购量不足1台";
+            }
+            
+            // 显示结果
+            document.getElementById('periodPlan').textContent = periodPlan.toLocaleString();
+            document.getElementById('periodUnits').textContent = periodUnits;
+            document.getElementById('dailyPlan').textContent = dailyUnits.toFixed(2);
+            document.getElementById('executionPlan').textContent = executionPlan;
+        }
+        
+        // 添加输入变化时的自动计算
+        document.getElementById('initialFund').addEventListener('input', calculate);
+        document.getElementById('purchasePrice').addEventListener('input', calculate);
+        document.getElementById('period').addEventListener('change', calculate);
+        
+        // 页面加载时自动计算一次
+        window.onload = calculate;
+    </script>
+</body>
+</html>
