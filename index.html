@@ -2,10 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>租机计划</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>租机计划计算器 - 天际速租</title>
     <style>
         * {
             margin: 0;
@@ -14,320 +12,259 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
         
         .container {
-            max-width: 100%;
-            min-height: 100vh;
-            background: white;
+            max-width: 680px;
+            margin: 0 auto;
+            position: relative;
         }
         
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .header h1 {
-            font-size: 24px;
-            font-weight: 600;
-        }
-        
-        .content {
-            padding: 20px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: transform 0.2s;
-        }
-        
-        .card:active {
-            transform: scale(0.98);
-        }
-        
-        .card h2 {
+        .brand {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #4a5568;
             font-size: 18px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .card p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
-        }
-        
-        .feature-list {
-            margin-top: 20px;
-        }
-        
-        .feature-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: #667eea;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-        
-        .feature-icon span {
-            font-size: 20px;
-        }
-        
-        .feature-text h3 {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .feature-text p {
-            font-size: 13px;
-            color: #666;
-        }
-        
-        .button {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            text-decoration: none;
-            transition: opacity 0.2s;
+            opacity: 0.9;
         }
         
-        .button:active {
-            opacity: 0.8;
+        .calculator {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
         }
         
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
+        .calculator::before {
+            content: '';
+            position: absolute;
+            top: 0;
             left: 0;
             right: 0;
-            background: white;
-            display: flex;
-            border-top: 1px solid #e0e0e0;
-            padding-bottom: env(safe-area-inset-bottom);
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         }
         
-        .tab-item {
-            flex: 1;
-            padding: 12px;
+        h2 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 30px;
             text-align: center;
-            cursor: pointer;
-            transition: background 0.2s;
+            font-weight: 600;
         }
         
-        .tab-item:active {
-            background: #f5f5f5;
+        .form-group {
+            margin-bottom: 25px;
         }
         
-        .tab-item.active {
-            color: #667eea;
-        }
-        
-        .tab-icon {
-            font-size: 24px;
-            margin-bottom: 4px;
-        }
-        
-        .tab-text {
-            font-size: 12px;
-        }
-        
-        .page {
-            display: none;
-            padding-bottom: 80px;
-        }
-        
-        .page.active {
+        label {
             display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 15px;
         }
         
-        @media (min-width: 768px) {
-            .container {
-                max-width: 768px;
-                margin: 0 auto;
-                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f7fafc;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+        
+        .result::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .result h3 {
+            color: #2d3748;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .result p {
+            color: #4a5568;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .result p:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .result span {
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        @media (max-width: 600px) {
+            .calculator {
+                padding: 30px 20px;
+            }
+            
+            .brand {
+                font-size: 14px;
+                top: 10px;
+                right: 10px;
+            }
+            
+            h2 {
+                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>租机计划</h1>
+        <div class="brand">天际速租</div>
+        <div class="calculator">
+            <h2>租机计划计算器</h2>
+        <div class="form-group">
+            <label for="initialFund">初始资金（元）:</label>
+            <input type="number" id="initialFund" value="1000000" min="0">
         </div>
-        
-        <div class="content">
-            <div id="home" class="page active">
-                <div class="card">
-                    <h2>欢迎使用租机计划</h2>
-                    <p>便捷的设备租赁管理平台，让租赁变得更简单。</p>
-                </div>
-                
-                <div class="feature-list">
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <span>📱</span>
-                        </div>
-                        <div class="feature-text">
-                            <h3>设备浏览</h3>
-                            <p>查看所有可租赁的设备信息</p>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <span>📋</span>
-                        </div>
-                        <div class="feature-text">
-                            <h3>订单管理</h3>
-                            <p>轻松管理您的租赁订单</p>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <span>💰</span>
-                        </div>
-                        <div class="feature-text">
-                            <h3>价格透明</h3>
-                            <p>清晰的价格体系，无隐藏费用</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="button" onclick="showPage('devices')">立即开始</button>
-            </div>
-            
-            <div id="devices" class="page">
-                <div class="card">
-                    <h2>iPhone 15 Pro</h2>
-                    <p>日租金：¥30起</p>
-                    <p>最新款iPhone，支持多种租期选择</p>
-                </div>
-                
-                <div class="card">
-                    <h2>MacBook Pro 14"</h2>
-                    <p>日租金：¥50起</p>
-                    <p>高性能笔记本电脑，适合专业工作</p>
-                </div>
-                
-                <div class="card">
-                    <h2>iPad Pro</h2>
-                    <p>日租金：¥25起</p>
-                    <p>便携高效的平板电脑</p>
-                </div>
-            </div>
-            
-            <div id="orders" class="page">
-                <div class="card">
-                    <h2>暂无订单</h2>
-                    <p>您还没有任何租赁订单</p>
-                </div>
-            </div>
-            
-            <div id="profile" class="page">
-                <div class="card">
-                    <h2>个人中心</h2>
-                    <p>手机号：138****8888</p>
-                </div>
-                
-                <div class="card">
-                    <h2>设置</h2>
-                    <p>账户设置、通知管理等</p>
-                </div>
-                
-                <div class="card">
-                    <h2>帮助与反馈</h2>
-                    <p>常见问题、联系客服</p>
-                </div>
-            </div>
+        <div class="form-group">
+            <label for="purchasePrice">采购价（元/台）:</label>
+            <input type="number" id="purchasePrice" value="8300" min="0">
         </div>
+        <div class="form-group">
+            <label for="period">期数:（每期为1个月，每期默认为22天）</label>
+            <select id="period">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="6">6</option>
+                <option value="12">12</option>
+            </select>
+        </div>
+        <button onclick="calculate()">计算</button>
         
-        <div class="tab-bar">
-            <div class="tab-item active" onclick="showPage('home')">
-                <div class="tab-icon">🏠</div>
-                <div class="tab-text">首页</div>
-            </div>
-            <div class="tab-item" onclick="showPage('devices')">
-                <div class="tab-icon">📱</div>
-                <div class="tab-text">设备</div>
-            </div>
-            <div class="tab-item" onclick="showPage('orders')">
-                <div class="tab-icon">📋</div>
-                <div class="tab-text">订单</div>
-            </div>
-            <div class="tab-item" onclick="showPage('profile')">
-                <div class="tab-icon">👤</div>
-                <div class="tab-text">我的</div>
-            </div>
+        <div class="result" id="result">
+            <h3>计算结果</h3>
+            <p>每期计划: <span id="periodPlan">-</span> 元</p>
+            <p>每期可采购: <span id="periodUnits">-</span> 台</p>
+            <p>每日计划:<span id="dailyPlan">-</span> 台</p>
+            <p>实际执行方案: <span id="executionPlan">-</span></p>
         </div>
     </div>
-    
+
     <script>
-        function showPage(pageId) {
-            // 隐藏所有页面
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
+        function calculate() {
+            // 获取输入值
+            const initialFund = parseFloat(document.getElementById('initialFund').value);
+            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
+            const period = parseInt(document.getElementById('period').value);
             
-            // 移除所有标签的激活状态
-            const tabs = document.querySelectorAll('.tab-item');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            // 显示选中的页面
-            document.getElementById(pageId).classList.add('active');
-            
-            // 激活对应的标签
-            const tabIndex = ['home', 'devices', 'orders', 'profile'].indexOf(pageId);
-            if (tabIndex !== -1) {
-                tabs[tabIndex].classList.add('active');
+            // 验证输入
+            if (isNaN(initialFund) || isNaN(purchasePrice) || isNaN(period)) {
+                alert('请输入有效的数值');
+                return;
             }
+            
+            if (initialFund <= 0 || purchasePrice <= 0) {
+                alert('初始资金和采购价必须大于0');
+                return;
+            }
+            
+            // 计算每期计划
+            const periodPlan = Math.round(initialFund / period);
+            
+            // 计算每期可采购台数
+            const periodUnits = Math.floor(periodPlan / purchasePrice);
+            
+            // 计算每日计划（假设每月22个工作日）
+            const dailyUnits = periodUnits / 22;
+            
+            // 处理小数部分，生成实际执行方案
+            let executionPlan = "";
+            if (dailyUnits >= 1) {
+                executionPlan = `每天 ${Math.round(dailyUnits)} 台`;
+            } else if (dailyUnits > 0) {
+                const daysPerUnit = Math.round(1 / dailyUnits);
+                executionPlan = `每 ${daysPerUnit} 天 1 台`;
+            } else {
+                executionPlan = "每期采购量不足1台";
+            }
+            
+            // 显示结果
+            document.getElementById('periodPlan').textContent = periodPlan.toLocaleString();
+            document.getElementById('periodUnits').textContent = periodUnits;
+            document.getElementById('dailyPlan').textContent = dailyUnits.toFixed(2);
+            document.getElementById('executionPlan').textContent = executionPlan;
         }
         
-        // 添加触摸反馈
-        document.addEventListener('touchstart', function() {}, {passive: true});
+        // 添加输入变化时的自动计算
+        document.getElementById('initialFund').addEventListener('input', calculate);
+        document.getElementById('purchasePrice').addEventListener('input', calculate);
+        document.getElementById('period').addEventListener('change', calculate);
         
-        // 阻止双击缩放
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(event) {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
+        // 页面加载时自动计算一次
+        window.onload = calculate;
     </script>
 </body>
 </html>
